@@ -33,13 +33,10 @@ def load_json_data_into_competition_season(json_file_path, filter_criteria=None)
                 print(record)
 
 
+conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
 
-if __name__ == "__main__":
-
-    conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
-
-    filter_criteria_data_for_competition_and_session = {(11, 90), (11, 42), (11, 4), (2, 44)}
-    load_json_data_into_competition_season('../open-data/competitions.json', filter_criteria_data_for_competition_and_session)
+filter_criteria_data_for_competition_and_session = {(11, 90), (11, 42), (11, 4), (2, 44)}
+load_json_data_into_competition_season('../open-data/competitions.json', filter_criteria_data_for_competition_and_session)
 
 
 

@@ -151,7 +151,6 @@ def load_json_data_from_match(conn, json_dir_path, filter_criteria):
             else:
                 print(f"Competition directory {comp_dir_path} does not exist.")
 
-if __name__ == "__main__":
-    conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
-    filter_criteria_data_for_competition_and_session = {(11, 90), (11, 42), (11, 4), (2, 44)}
-    load_json_data_from_match(conn, '../open-data/data/matches', filter_criteria_data_for_competition_and_session)
+conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
+filter_criteria_data_for_competition_and_session = {(11, 90), (11, 42), (11, 4), (2, 44)}
+load_json_data_from_match(conn, '../open-data/data/matches', filter_criteria_data_for_competition_and_session)

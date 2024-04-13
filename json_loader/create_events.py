@@ -373,18 +373,23 @@ def load_json_data_from_events(conn, json_dir_path, x = 0):
                             if end_location is not None:
                                 end_location_x = end_location[0]
                                 end_location_y = end_location[1]
+                                if len(end_location) == 3:
+                                    end_location_z = end_location[2]
+                                else:
+                                    end_location_z = None
                             else:
                                 end_location_x = None 
                                 end_location_y = None
+                                end_location_z = None
 
                             cur.execute("""
                                 INSERT INTO Shots (
-                                    event_id, freeze_frame, body_part_id, end_location_x, end_location_y, technique_id, first_time, follows_dribble, statsbomb_xg, outcome_id,outcome_name  
+                                    event_id, freeze_frame, body_part_id, end_location_x, end_location_y, end_location_z, technique_id, first_time, follows_dribble, statsbomb_xg, outcome_id,outcome_name  
                                 ) 
-                                VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s,%s,%s)
+                                VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s,%s,%s,%s)
                                 ON CONFLICT DO NOTHING;
                             """, (
-                                event_id, freeze_frame_json, body_part_id, end_location_x, end_location_y, technique_id, first_time, follows_dribble, statsbomb_xg, outcome_id,outcome_name  
+                                event_id, freeze_frame_json, body_part_id, end_location_x, end_location_y, end_location_z, technique_id, first_time, follows_dribble, statsbomb_xg, outcome_id,outcome_name  
                             ))
 
                         if EventTypes_name == "Pass":
@@ -436,7 +441,7 @@ def load_json_data_from_events(conn, json_dir_path, x = 0):
                                     backheel, deflected, miscommunication, "cross", cut_back, switch, through_ball, shot_assist,
                                     goal_assist, body_part_id, pass_type_id, outcome_id, outcome_name, pass_technique_id
                                 ) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                                 ON CONFLICT (event_id) DO NOTHING;
                             """, (
                                 event_id, recipient_id, length, angle, height_id,height_name, end_location_x, end_location_y, assisted_shot_id,
@@ -600,9 +605,20 @@ def load_json_data_from_events(conn, json_dir_path, x = 0):
                             ))
 
                         if EventTypes_name == "Clearance":
+                            body_part_id = event.get('clearance',{}).get('body_part', {}).get("id")
+                            name = event.get('clearance',{}).get('body_part', {}).get("name")
+                            if body_part_id is not None:
+                                cur.execute("""
+                                    INSERT INTO BodyParts (
+                                        body_part_id, name
+                                    ) 
+                                    VALUES (%s, %s)
+                                    ON CONFLICT DO NOTHING;
+                                """, (
+                                    body_part_id, name
+                                ))
                             # Clearance
                             aerial_won =  event.get('clearance',{}).get('aerial_won', None)
-                            body_part_id =  event.get('clearance',{}).get('body_part', {}).get('id')
                             cur.execute("""
                                 INSERT INTO Clearance (
                                     event_id, aerial_won, body_part_id
@@ -668,6 +684,6 @@ def load_json_data_from_events(conn, json_dir_path, x = 0):
                             ))
         conn.commit()
 
-if __name__ == "__main__":
-    conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
-    load_json_data_from_events(conn, '../open-data/data/events')  
+
+conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
+load_json_data_from_events(conn, '../open-data/data/events')  

@@ -16,6 +16,7 @@ def create_a_table():
         body_part_id INT,
         end_location_x INT,
         end_location_y INT,
+        end_location_z INT,
         technique_id INT,
         first_time BOOLEAN,
         follows_dribble BOOLEAN,
@@ -373,6 +374,7 @@ def create_tables():
         body_part_id INT,
         end_location_x INT,
         end_location_y INT,
+        end_location_z INT,
         technique_id INT,
         first_time BOOLEAN,
         follows_dribble BOOLEAN,
@@ -394,6 +396,7 @@ def create_tables():
         height_name VARCHAR(255),
         end_location_x INT,
         end_location_y INT,
+        end_location_z INT,
         assisted_shot_id UUID,
         backheel BOOLEAN,
         deflected BOOLEAN,
@@ -583,12 +586,11 @@ def drop_a_tables():
     conn.close()
 
 
-if __name__ == "__main__":
-    drop_all_tables()
-    create_tables()
-    # for tophatting 
-    # drop_a_tables()
-    # create_a_table()
+drop_all_tables()
+create_tables()
+# for tophatting 
+# drop_a_tables()
+# create_a_table()
     
 
 

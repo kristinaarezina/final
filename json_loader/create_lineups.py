@@ -83,7 +83,6 @@ def load_lineups(conn, json_dir_path, x= 0):
 
     conn.commit()
 
-if __name__ == "__main__":
-    conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
-    json_dir_path = '../open-data/data/lineups'
-    load_lineups(conn, json_dir_path)
+conn = psycopg.connect("dbname=project_database user=postgres password=1234", row_factory=dict_row)
+json_dir_path = '../open-data/data/lineups'
+load_lineups(conn, json_dir_path)
